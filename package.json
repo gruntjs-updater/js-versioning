@@ -1,7 +1,7 @@
 {
   "name": "js-versioning",
   "description": "A plugin for bumping a version number in a javascript file for your application",
-  "version": "0.1.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/rpetz/js-versioning",
   "author": {
     "name": "Robert Petz",
@@ -31,10 +31,10 @@
     "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-clean": "~0.4.0",
     "grunt-contrib-nodeunit": "~0.2.0",
-    "grunt": "~0.4.4"
+    "grunt": "~0.4.0"
   },
   "peerDependencies": {
-    "grunt": "~0.4.4"
+    "grunt": "~0.4.0"
   },
   "keywords": [
     "gruntplugin"
