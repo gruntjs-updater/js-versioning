@@ -1,0 +1,42 @@
+{
+  "name": "js-versioning",
+  "description": "A plugin for bumping a version number in a javascript file for your application",
+  "version": "0.1.0",
+  "homepage": "https://github.com/rpetz/js-versioning",
+  "author": {
+    "name": "Robert Petz",
+    "email": "rpetz@petzent.com",
+    "url": "http://ignitelabs.net"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rpetz/js-versioning.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rpetz/js-versioning/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/rpetz/js-versioning/blob/master/LICENSE-MIT"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt": "~0.4.4"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.4"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
