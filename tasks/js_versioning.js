@@ -4,47 +4,70 @@
  *
  * Copyright (c) 2014 Robert Petz
  * Licensed under the MIT license.
+ *
+ * NOTE: Some of this code is built from code in the grunt-contrib-uglify project - credit where credit is due
  */
 
 'use strict';
 
+var path = require('path');
+
+/* From grunt-contrib-uglify */
+// Return the relative path from file1 => file2
+var relativePath = function(file1, file2) {
+	var file1Dirname = path.dirname(file1);
+	var file2Dirname = path.dirname(file2);
+	if (file1Dirname !== file2Dirname)
+		return path.relative(file1Dirname, file2Dirname) + path.sep;
+	return "";
+};
+
 module.exports = function(grunt) {
+	grunt.registerMultiTask('version', 'A plugin for bumping a version number in a javascript file for your application', function() {
+		// Merge task-specific and/or target-specific options with these defaults.
+		var options = this.options({
+			majorVersion: '',
+			minorVersion: '',
+		});
 
-  // Please see the Grunt documentation for more information regarding task
-  // creation: http://gruntjs.com/creating-tasks
+		var source = this.versionFile;
+		var output = this.outputFile;
 
-  grunt.registerMultiTask('js_versioning', 'A plugin for bumping a version number in a javascript file for your application', function() {
-    // Merge task-specific and/or target-specific options with these defaults.
-    var options = this.options({
-      punctuation: '.',
-      separator: ', '
-    });
+		if (!grunt.file.exists(source))
+		{
+			grunt.log.warn('Versioning file ' + chalk.cyan(source) + ' not found.');
+			return;
+		}
 
-    // Iterate over all specified file groups.
-    this.files.forEach(function(f) {
-      // Concat specified files.
-      var src = f.src.filter(function(filepath) {
-        // Warn on and remove invalid source files (if nonull was set).
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found.');
-          return false;
-        } else {
-          return true;
-        }
-      }).map(function(filepath) {
-        // Read file source.
-        return grunt.file.read(filepath);
-      }).join(grunt.util.normalizelf(options.separator));
+		if (!grunt.file.exists(output))
+		{
+			grunt.log.warn('Output file ' + chalk.cyan(source) + ' not found.');
+			return;
+		}
 
-      // Handle options.
-      src += options.punctuation;
+		var sourceContent = grunt.file.read(source);
+		if (sourceContent.length == 0) sourceContent = "0";
+		var buildVersion = parseInt(sourceContent);
 
-      // Write the destination file.
-      grunt.file.write(f.dest, src);
+		if (isNaN(buildVersion))
+		{
+			grunt.log.warn('Version file content is not valid.  Expected integer, received ' + sourceContent);
+			return;
+		}
 
-      // Print a success message.
-      grunt.log.writeln('File "' + f.dest + '" created.');
-    });
-  });
+		buildVersion++;
+		var newVersion = majorVersion + "." + minorVersion + "." + buildVersion;
 
+		grunt.log.writeln('Writing new version: ' + newVersion);
+		grunt.file.write(source, buildVersion);
+
+		var destinationContent = grunt.file.read(output);
+		destinationContent = destinationContent.replace(/<!version--!>/g, newVersion)
+		destinationContent = destinationContent.replace(/<!timestamp--!>/g, (new Date()).toLocaleString());
+
+		grunt.log.writeln('Performing output replacements');
+		grunt.file.write(output, destinationContent);
+
+		grunt.log.writeln('Complete');
+	});
 };
