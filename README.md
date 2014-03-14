@@ -22,68 +22,110 @@ grunt.loadNpmTasks('js-versioning');
 ### Overview
 In your project's Gruntfile, add a section named `js_versioning` to the data object passed into `grunt.initConfig()`.
 
-```js
-grunt.initConfig({
-  js_versioning: {
-    options: {
-      // Task-specific options go here.
-    },
-    your_target: {
-      // Target-specific file lists and/or options go here.
-    },
-  },
-});
-```
+
+    grunt.initConfig({
+      js_versioning: {
+            options: {
+				majorVersion: [x],
+				minorVersion: [y],
+				versionFile: [relative path to version file]
+				outputFile: [relative path to output file]
+            },
+            your_target: {
+	            options: {
+					majorVersion: [x],
+					minorVersion: [y],
+					versionFile: [relative path to version file]
+					outputFile: [relative path to output file]
+	            },
+            },
+        },
+    });
+
 
 ### Options
 
-#### options.separator
-Type: `String`
-Default value: `',  '`
+#### majorVersion
+Type: `int`
+Default value: `0`
 
-A string value that is used to do something with whatever.
+An integer value representing the first number in the version number - X in 'X.Y.Z'
 
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
+#### minorVersion
+Type: `int`
+Default value: `0`
 
-A string value that is used to do something else with whatever else.
+An integer value representing the second number in the version number - Y in 'X.Y.Z'
+
+#### versionFile
+Type: `string`
+Default value: `Not Applicable`
+
+A relative path to a file that stores the current version number.  This file should be empty to start.
+
+#### outputFile
+Type: `string`
+Default value: `Not Applicable`
+
+A relative path to a file that will be updated with the new version number.  This file can contain either of the following replacement strings:
+
+`<!version-->` - Will get replaced with the version number
+
+`<!timestamp-->` - Will get replaced with the timestamp of when that version was created
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+In this example, the default options are used to start versioning. If the `versionFile` has no content and the `outputFile` file had the content `<!version-->` somewhere in it, the generated result in the output file would be `0.0.1` on the first execution, `0.0.2` on the second, etc...etc...
 
-```js
-grunt.initConfig({
-  js_versioning: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
+	grunt.initConfig({
+	  js_versioning: {
+	    options: {
+	        versionFile: "js/.version",
+			outputFile: "app.js"
+	    }
+	  },
+	});
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+######outputFile content - `0.0.1`
+######versionFile content - `0.0.1`
 
-```js
-grunt.initConfig({
-  js_versioning: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
+#### Specific starting major and minor versions
+In this example, we explicitly specify the starting major and minor version numbers.  If the `versionFile` has no content and the `outputFile` had the content `<!version-->` somewhere in it, the generated result in the output file would be `1.5.1` on the first execution, `1.5.2` on the second, etc...etc...
+
+If the `versionFile` has a version number in it already, the major version will be retained:
+
+######outputFile content - `2.4.1` - result: `1.4.2`
+
+As you can see, the major version defined in the gruntfile is always retained, regardless of what is in the version file.  The minor version is always kept to what is in the version file.
+
+	grunt.initConfig({
+	  js_versioning: {
+	    options: {
+			majorVersion: 1,
+			minorVersion: 5, //Optional here (unless the output file is empty, this value will never be used)
+	        versionFile: "js/.version",
+			outputFile: "app.js"
+	    }
+	  },
+	});
+
+#### Minor version incrementing
+If the build version hits `100` the minor version is incremented by `1`:
+
+######outputFile content - `2.4.99` - result: `2.5.0`
+
+	grunt.initConfig({
+	  js_versioning: {
+	    options: {
+	        versionFile: "js/.version",
+			outputFile: "app.js"
+	    }
+	  },
+	});
 
 ## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+In lieu of a formal styleguide, take care to maintain the existing coding style. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+3/14/2014 - Version 1.0.4 released

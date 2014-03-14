@@ -22,8 +22,8 @@ module.exports = function(grunt) {
 
 		// Merge task-specific and/or target-specific options with these defaults.
 		var options = this.options({
-			majorVersion: '',
-			minorVersion: '',
+			majorVersion: '0',
+			minorVersion: '0',
 			versionFile: '',
 			outputFile: ''
 		});
