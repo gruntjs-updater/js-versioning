@@ -1,7 +1,7 @@
 {
   "name": "js-versioning",
   "description": "A plugin for bumping a version number in a javascript file for your application",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "homepage": "https://github.com/rpetz/js-versioning",
   "author": {
     "name": "Robert Petz",

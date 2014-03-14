@@ -44,21 +44,30 @@ module.exports = function(grunt) {
 		}
 
 		var sourceContent = grunt.file.read(options.versionFile);
-		if (sourceContent.length == 0) sourceContent = "0";
-		var buildVersion = parseInt(sourceContent);
-		grunt.log.writeln('Old Version: ' + buildVersion);
+		if (sourceContent.length == 0) sourceContent = options.majorVersion + "." + options.minorVersion + ".0";
+		var versionInfo = sourceContent.split(".");
 
-		if (isNaN(buildVersion))
+		var majVersion = parseInt(versionInfo[0]);
+		var minVersion = parseInt(versionInfo[1]);
+		var buildVersion = parseInt(versionInfo[2]);
+		grunt.log.writeln('Old Version: ' + majVersion + "." + minVersion + "." + buildVersion);
+
+		if (isNaN(buildVersion) || isNaN(minVersion) || isNaN(majVersion))
 		{
 			grunt.log.warn('Version file content is not valid.  Expected integer, received ' + sourceContent);
 			return;
 		}
 
 		buildVersion = buildVersion + 1;
-		var newVersion = options.majorVersion + "." + options.minorVersion + "." + buildVersion;
+		if (buildVersion == 100)
+		{
+			buildVersion = 0;
+			minVersion = minVersion + 1;
+		}
+		var newVersion = options.majorVersion + "." + minVersion + "." + buildVersion;
 
 		grunt.log.writeln('Writing new version: ' + newVersion);
-		grunt.file.write(options.versionFile, buildVersion);
+		grunt.file.write(options.versionFile, newVersion);
 
 		var d = new Date();
 		var h = d.getHours();
